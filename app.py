@@ -21,9 +21,21 @@ def movie():
     return render_template('movie.html', items=items)
 
 
-@app.route('/')
-def index():
-	return render_template('index.html')
+@app.route('/info/<id>', methods=['POST','GET'])
+def index(id):
+    apikey = '6f6c977'
+    imdb_search = id
+    r = requests.get('http://www.omdbapi.com/?apikey='+apikey+'&i='+imdb_search)
+    json_object = r.json()
+
+    title = json_object['Title']
+    rated = json_object['Rated']
+    poster = json_object['Poster']
+    runtime = json_object['Runtime']
+    plot = json_object['Plot']
+
+    #return json_object
+    return render_template('info.html', title=title, rated=rated, poster=poster, runtime=runtime)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='127.0.0.1')
